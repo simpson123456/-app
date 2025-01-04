@@ -5,11 +5,10 @@ import pdfplumber
 from io import BytesIO
 from pyxlsb import open_workbook as open_xlsb
 
-a = st.text_input('输出文件名称：')
 uploaded_file = st.file_uploader("选择PDF文件:", type="pdf")
 
 if uploaded_file is not None:
-
+    a = str(st.text_input('输出文件名称：')) + '.csv'
     b = uploaded_file
 
     pdf = pdfplumber.open(b)
@@ -247,7 +246,7 @@ if uploaded_file is not None:
         label = "📥下载文件至本地",
         data = df_xlsx,
         file_name = a,
-        mime = "text/csv",
+        mime = "csv",
     )
 
 
