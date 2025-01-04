@@ -8,7 +8,7 @@ from pyxlsb import open_workbook as open_xlsb
 uploaded_file = st.file_uploader("选择PDF文件:", type="pdf")
 
 if uploaded_file is not None:
-    a = str(st.text_input('输出文件名称：')) + '.csv'
+    a = str(st.text_input('输出文件名称：')) + '.xlsx'
     b = uploaded_file
 
     pdf = pdfplumber.open(b)
@@ -246,7 +246,6 @@ if uploaded_file is not None:
         label = "📥下载文件至本地",
         data = df_xlsx,
         file_name = a,
-        mime = "csv",
     )
 
 
