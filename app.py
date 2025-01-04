@@ -5,10 +5,10 @@ import pdfplumber
 from io import BytesIO
 from pyxlsb import open_workbook as open_xlsb
 
+a = st.text_input('输出文件名称：')
 uploaded_file = st.file_uploader("选择PDF文件:", type="pdf")
+
 if uploaded_file is not None:
-    a = st.text_input('输出文件名称：')
-    st.write(uploaded_file.name)
 
     b = uploaded_file
 
@@ -229,25 +229,25 @@ if uploaded_file is not None:
         "打印日期": print_date
     }
 
-data = pd.DataFrame.from_dict(data)
+    data = pd.DataFrame.from_dict(data)
 
-def to_excel(df):
-    output = BytesIO()
-    writer = pd.ExcelWriter(output, engine='xlsxwriter')
-    df.to_excel(writer, index=False, sheet_name='Sheet1')
-    workbook = writer.book
-    worksheet = writer.sheets['Sheet1']
-    writer._save()  # writer.save() 版本问题使用：_save()
-    processed_data = output.getvalue()
-    return processed_data
+    def to_excel(df):
+        output = BytesIO()
+        writer = pd.ExcelWriter(output, engine='xlsxwriter')
+        df.to_excel(writer, index=False, sheet_name='Sheet1')
+        workbook = writer.book
+        worksheet = writer.sheets['Sheet1']
+        writer._save()  # writer.save() 版本问题使用：_save()
+        processed_data = output.getvalue()
+        return processed_data
 
-df_xlsx = to_excel(data)
+    df_xlsx = to_excel(data)
 
-st.download_button(
-    label = "📥下载文件至本地",
-    data = df_xlsx,
-    file_name = a,
-    mime = "text/csv",
-)
+    st.download_button(
+        label = "📥下载文件至本地",
+        data = df_xlsx,
+        file_name = a,
+        mime = "text/csv",
+    )
 
 
