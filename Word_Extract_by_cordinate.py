@@ -11,7 +11,7 @@ uploaded_file = st.file_uploader("选择PDF文件:", type="pdf")
 
 if uploaded_file is not None:
     output_file_name = str(st.text_input('输出文件名称：')) + '.xlsx'
-    input_file_name = str(uploaded_file.name) + '.pdf'
+    uploaded_file = str(uploaded_file.name) + '.pdf'
     pdf = pdfplumber.open(uploaded_file)
     pdf_page_num = len(pdf.pages)
 
@@ -57,81 +57,81 @@ if uploaded_file is not None:
 
     for page_num in range(pdf_page_num):
         if '主页' in pdf.pages[page_num].extract_text():
-            sheet_nums_i = tabula.read_pdf(input_file_name,pages=page_num+1, area=[1.55*72, 1.52*72, 1.67*72, 2.77*72])[0].columns[0]
-            export_num_i = tabula.read_pdf(input_file_name,pages=page_num+1, area=[1.55*72, 6.5*72, 1.67*72, 7.77*72])[0].columns[0]
-            export_port_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[1.8*72, 0.575*72, 2.15*72, 2.745*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[1.8*72, 0.575*72, 2.15*72, 2.745*72])[0].iloc[0,0]
-            record_num_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[1.8*72, 2.74*72, 2.15*72, 4.9*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[1.8*72, 2.74*72, 2.15*72, 4.9*72])[0].iloc[0,0]
+            sheet_nums_i = tabula.read_pdf(uploaded_file,pages=page_num+1, area=[1.55*72, 1.52*72, 1.67*72, 2.77*72])[0].columns[0]
+            export_num_i = tabula.read_pdf(uploaded_file,pages=page_num+1, area=[1.55*72, 6.5*72, 1.67*72, 7.77*72])[0].columns[0]
+            export_port_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[1.8*72, 0.575*72, 2.15*72, 2.745*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[1.8*72, 0.575*72, 2.15*72, 2.745*72])[0].iloc[0,0]
+            record_num_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[1.8*72, 2.74*72, 2.15*72, 4.9*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[1.8*72, 2.74*72, 2.15*72, 4.9*72])[0].iloc[0,0]
             export_date_i = "".join(list(filter(None, sum(pdf.pages[page_num].extract_tables()[0], []))))[
                     "".join(list(filter(None, sum(pdf.pages[page_num].extract_tables()[0], [])))).find("出口日期\n") + len("出口日期\n"):"".join(list(filter(None, sum(pdf.pages[page_num].extract_tables()[0], [])))).find("申报日期")]
             declare_date_i = "".join(list(filter(None, sum(pdf.pages[page_num].extract_tables()[0], []))))[
                     "".join(list(filter(None, sum(pdf.pages[page_num].extract_tables()[0], [])))).find("申报日期\n") + len("申报日期\n"):"".join(list(filter(None, sum(pdf.pages[page_num].extract_tables()[0], [])))).find("境内收发货人")]
-            domestic_consignee_i= '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.15*72, 0.575*72, 2.525*72, 2.745*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.15*72, 0.575*72, 2.525*72, 2.745*72])[0].iloc[0,0]
-            shipping_method_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.15*72, 2.745*72, 2.525*72, 4.13*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.15*72, 2.745*72, 2.525*72, 4.13*72])[0].iloc[0,0]
-            means_of_transport_name_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.15*72, 4.13*72, 2.525*72, 6.205*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.15*72, 4.13*72, 2.525*72, 6.205*72])[0].iloc[0,0]
-            bill_of_lading_number_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.15*72, 6.205*72, 2.525*72, 7.765*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.15*72, 6.205*72, 2.525*72, 7.765*72])[0].iloc[0,0]
-            prod_entity_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.525*72, 0.575*72, 2.88*72, 2.745*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.525*72, 0.575*72, 2.88*72, 2.745*72])[0].iloc[0,0]
-            trading_method_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.525*72, 2.745*72, 2.88*72, 4.9*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.525*72, 2.745*72, 2.88*72, 4.9*72])[0].iloc[0,0]
-            nature_of_exemption_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.525*72, 4.9*72, 2.88*72, 6.8*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.525*72, 4.9*72, 2.88*72, 6.8*72])[0].iloc[0,0]
-            exchange_settlement_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.525*72, 4.9*72, 2.88*72, 7.765*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.525*72, 4.9*72, 2.88*72, 7.765*72])[0].iloc[0,0]
-            license_number_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.88*72, 0.575*72, 3.235*72, 2.745*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.88*72, 0.575*72, 3.235*72, 2.745*72])[0].iloc[0,0]
-            country_of_arrival_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.88*72, 2.745*72, 3.235*72, 4.9*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.88*72, 2.745*72, 3.235*72, 4.9*72])[0].iloc[0,0]
-            transshipment_port_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.88*72, 4.9*72, 3.235*72, 6.205*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.88*72, 4.9*72, 3.235*72, 6.205*72])[0].iloc[0,0]
-            domestic_source_of_goods_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.88*72, 6.205*72, 3.235*72, 7.765*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[2.88*72, 6.205*72, 3.235*72, 7.765*72])[0].iloc[0,0]
-            approval_no_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.235*72, 0.575*72, 3.625*72, 2.745*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.235*72, 0.575*72, 3.625*72, 2.745*72])[0].iloc[0,0]
-            closing_method_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.235*72, 2.745*72, 3.625*72, 4.13*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.235*72, 2.745*72, 3.625*72, 4.13*72])[0].iloc[0,0]
-            freight_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.235*72, 4.13*72, 3.625*72, 5.365*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.235*72, 4.13 *72, 3.625*72, 5.365*72])[0].iloc[0,0]
-            premium_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.235*72, 5.365*72, 3.625*72, 6.205*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.235*72, 5.365*72, 3.625*72, 6.205*72])[0].iloc[0,0]
-            miscellaneous_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.235*72, 6.205*72, 3.625*72, 7.765*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.235*72, 6.205*72, 3.625*72, 7.765*72])[0].iloc[0,0]
-            contract_num_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.625*72, 0.575*72, 3.975*72, 2.745*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.625*72, 0.575*72, 3.975*72, 2.745*72])[0].iloc[0,0]
-            num_of_pieces_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.625*72, 2.745*72, 3.975*72, 4.13*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.625*72, 2.745*72, 3.975*72, 4.13*72])[0].iloc[0,0]
-            type_of_packaging_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.625*72, 4.13*72, 3.975*72, 5.365*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.625*72, 4.13*72, 3.975*72, 5.365*72])[0].iloc[0,0]
-            gross_weight_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.625*72, 5.365*72, 3.975*72, 6.8*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.625*72, 5.365*72, 3.975*72, 6.8*72])[0].iloc[0,0]
-            net_weight_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.625*72, 6.8*72, 3.975*72, 7.765*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.625*72, 6.8*72, 3.975*72, 7.765*72])[0].iloc[0,0]
-            container_no_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.975*72, 0.575*72, 4.325*72, 2.745*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.975*72, 0.575*72, 4.325*72, 2.745*72])[0].iloc[0,0]
-            documents_attached_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.975*72, 2.745*72, 4.325*72, 6.205*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.975*72, 2.745*72, 4.325*72, 6.205*72])[0].iloc[0,0]
-            manufacturer_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.975*72, 6.205*72, 4.325*72, 7.765*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[3.975*72, 6.205*72, 4.325*72, 7.765*72])[0].iloc[0,0]
-            shipping_marks_and_remarks_i = '' if tabula.read_pdf(input_file_name,pages=page_num+1, area=[4.325*72, 0.575*72, 4.67*72, 7.765*72])[0].empty \
-                else tabula.read_pdf(input_file_name,pages=page_num+1, area=[4.325*72, 0.575*72, 4.67*72, 7.765*72])[0].iloc[0,0]
+            domestic_consignee_i= '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.15*72, 0.575*72, 2.525*72, 2.745*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.15*72, 0.575*72, 2.525*72, 2.745*72])[0].iloc[0,0]
+            shipping_method_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.15*72, 2.745*72, 2.525*72, 4.13*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.15*72, 2.745*72, 2.525*72, 4.13*72])[0].iloc[0,0]
+            means_of_transport_name_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.15*72, 4.13*72, 2.525*72, 6.205*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.15*72, 4.13*72, 2.525*72, 6.205*72])[0].iloc[0,0]
+            bill_of_lading_number_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.15*72, 6.205*72, 2.525*72, 7.765*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.15*72, 6.205*72, 2.525*72, 7.765*72])[0].iloc[0,0]
+            prod_entity_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.525*72, 0.575*72, 2.88*72, 2.745*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.525*72, 0.575*72, 2.88*72, 2.745*72])[0].iloc[0,0]
+            trading_method_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.525*72, 2.745*72, 2.88*72, 4.9*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.525*72, 2.745*72, 2.88*72, 4.9*72])[0].iloc[0,0]
+            nature_of_exemption_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.525*72, 4.9*72, 2.88*72, 6.8*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.525*72, 4.9*72, 2.88*72, 6.8*72])[0].iloc[0,0]
+            exchange_settlement_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.525*72, 4.9*72, 2.88*72, 7.765*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.525*72, 4.9*72, 2.88*72, 7.765*72])[0].iloc[0,0]
+            license_number_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.88*72, 0.575*72, 3.235*72, 2.745*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.88*72, 0.575*72, 3.235*72, 2.745*72])[0].iloc[0,0]
+            country_of_arrival_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.88*72, 2.745*72, 3.235*72, 4.9*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.88*72, 2.745*72, 3.235*72, 4.9*72])[0].iloc[0,0]
+            transshipment_port_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.88*72, 4.9*72, 3.235*72, 6.205*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.88*72, 4.9*72, 3.235*72, 6.205*72])[0].iloc[0,0]
+            domestic_source_of_goods_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.88*72, 6.205*72, 3.235*72, 7.765*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[2.88*72, 6.205*72, 3.235*72, 7.765*72])[0].iloc[0,0]
+            approval_no_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.235*72, 0.575*72, 3.625*72, 2.745*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.235*72, 0.575*72, 3.625*72, 2.745*72])[0].iloc[0,0]
+            closing_method_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.235*72, 2.745*72, 3.625*72, 4.13*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.235*72, 2.745*72, 3.625*72, 4.13*72])[0].iloc[0,0]
+            freight_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.235*72, 4.13*72, 3.625*72, 5.365*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.235*72, 4.13 *72, 3.625*72, 5.365*72])[0].iloc[0,0]
+            premium_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.235*72, 5.365*72, 3.625*72, 6.205*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.235*72, 5.365*72, 3.625*72, 6.205*72])[0].iloc[0,0]
+            miscellaneous_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.235*72, 6.205*72, 3.625*72, 7.765*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.235*72, 6.205*72, 3.625*72, 7.765*72])[0].iloc[0,0]
+            contract_num_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.625*72, 0.575*72, 3.975*72, 2.745*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.625*72, 0.575*72, 3.975*72, 2.745*72])[0].iloc[0,0]
+            num_of_pieces_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.625*72, 2.745*72, 3.975*72, 4.13*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.625*72, 2.745*72, 3.975*72, 4.13*72])[0].iloc[0,0]
+            type_of_packaging_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.625*72, 4.13*72, 3.975*72, 5.365*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.625*72, 4.13*72, 3.975*72, 5.365*72])[0].iloc[0,0]
+            gross_weight_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.625*72, 5.365*72, 3.975*72, 6.8*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.625*72, 5.365*72, 3.975*72, 6.8*72])[0].iloc[0,0]
+            net_weight_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.625*72, 6.8*72, 3.975*72, 7.765*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.625*72, 6.8*72, 3.975*72, 7.765*72])[0].iloc[0,0]
+            container_no_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.975*72, 0.575*72, 4.325*72, 2.745*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.975*72, 0.575*72, 4.325*72, 2.745*72])[0].iloc[0,0]
+            documents_attached_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.975*72, 2.745*72, 4.325*72, 6.205*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.975*72, 2.745*72, 4.325*72, 6.205*72])[0].iloc[0,0]
+            manufacturer_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.975*72, 6.205*72, 4.325*72, 7.765*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[3.975*72, 6.205*72, 4.325*72, 7.765*72])[0].iloc[0,0]
+            shipping_marks_and_remarks_i = '' if tabula.read_pdf(uploaded_file,pages=page_num+1, area=[4.325*72, 0.575*72, 4.67*72, 7.765*72])[0].empty \
+                else tabula.read_pdf(uploaded_file,pages=page_num+1, area=[4.325*72, 0.575*72, 4.67*72, 7.765*72])[0].iloc[0,0]
             print_date_i = pdf.pages[page_num].extract_text()[pdf.pages[page_num].extract_text().find("打印日期：") + len("打印日期："):len(
                 pdf.pages[page_num].extract_text())]
 
             for row in range(6):
-                if tabula.read_pdf(input_file_name, pages=page_num + 1, area=[(5.027+row*0.458) * 72, 0.575 * 72, (5.485+row*0.458) * 72, 7.765 * 72])[0].empty is False:
-                    good_num_i = tabula.read_pdf(input_file_name,pages=page_num+1, area=[(5.027+row*0.458) *72, 1.05*72, (5.485+row*0.458)*72, 1.725*72])[0].columns[0]
-                    good_name_i = tabula.read_pdf(input_file_name,pages=page_num+1, area=[(5.027+row*0.458) *72, 1.725*72, (5.485+row*0.458)*72, 2.75*72])[0].columns[0]
-                    good_quan_i = tabula.read_pdf(input_file_name, pages=page_num + 1,
-                        area=[(5.027+row*0.458) *72, 2.75*72, (5.485+row*0.458)*72, 3.6*72])[0].columns[0]+' '+str(tabula.read_pdf(input_file_name,pages=page_num+1, area=[(5.027+row*0.458) *72, 2.75*72, (5.485+row*0.458)*72, 3.6*72])[0].iloc[0,0])
-                    country_of_final_destination_i = tabula.read_pdf(input_file_name, pages=page_num + 1,
-                        area=[(5.027+row*0.458) *72, 3.6*72, (5.485+row*0.458)*72, 4.85*72])[0].columns[0]+str(tabula.read_pdf(input_file_name,pages=page_num+1, area=[(5.027+row*0.458) *72, 3.6*72, (5.485+row*0.458)*72, 4.85*72])[0].iloc[0,0])
-                    price_i = tabula.read_pdf(input_file_name,pages=page_num+1, area=[(5.027+row*0.458) *72, 4.85*72, (5.485+row*0.458)*72, 5.4*72])[0].columns[0]
-                    sum_price_i = tabula.read_pdf(input_file_name,pages=page_num+1, area=[(5.027+row*0.458) *72, 5.4*72, (5.485+row*0.458)*72, 6.25*72])[0].columns[0]
+                if tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[(5.027+row*0.458) * 72, 0.575 * 72, (5.485+row*0.458) * 72, 7.765 * 72])[0].empty is False:
+                    good_num_i = tabula.read_pdf(uploaded_file,pages=page_num+1, area=[(5.027+row*0.458) *72, 1.05*72, (5.485+row*0.458)*72, 1.725*72])[0].columns[0]
+                    good_name_i = tabula.read_pdf(uploaded_file,pages=page_num+1, area=[(5.027+row*0.458) *72, 1.725*72, (5.485+row*0.458)*72, 2.75*72])[0].columns[0]
+                    good_quan_i = tabula.read_pdf(uploaded_file, pages=page_num + 1,
+                        area=[(5.027+row*0.458) *72, 2.75*72, (5.485+row*0.458)*72, 3.6*72])[0].columns[0]+' '+str(tabula.read_pdf(uploaded_file,pages=page_num+1, area=[(5.027+row*0.458) *72, 2.75*72, (5.485+row*0.458)*72, 3.6*72])[0].iloc[0,0])
+                    country_of_final_destination_i = tabula.read_pdf(uploaded_file, pages=page_num + 1,
+                        area=[(5.027+row*0.458) *72, 3.6*72, (5.485+row*0.458)*72, 4.85*72])[0].columns[0]+str(tabula.read_pdf(uploaded_file,pages=page_num+1, area=[(5.027+row*0.458) *72, 3.6*72, (5.485+row*0.458)*72, 4.85*72])[0].iloc[0,0])
+                    price_i = tabula.read_pdf(uploaded_file,pages=page_num+1, area=[(5.027+row*0.458) *72, 4.85*72, (5.485+row*0.458)*72, 5.4*72])[0].columns[0]
+                    sum_price_i = tabula.read_pdf(uploaded_file,pages=page_num+1, area=[(5.027+row*0.458) *72, 5.4*72, (5.485+row*0.458)*72, 6.25*72])[0].columns[0]
 
                     sheet_nums.append(sheet_nums_i)
                     export_num.append(export_num_i)
@@ -176,221 +176,221 @@ if uploaded_file is not None:
                     break
         else:
             sheet_nums_i = \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[1.55 * 72-0.122*72, 1.52 * 72, 1.67 * 72-0.122*72, 2.77 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[1.55 * 72-0.122*72, 1.52 * 72, 1.67 * 72-0.122*72, 2.77 * 72])[
                 0].columns[0]
             export_num_i = \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[1.55 * 72-0.122*72, 6.5 * 72, 1.67 * 72-0.122*72, 7.77 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[1.55 * 72-0.122*72, 6.5 * 72, 1.67 * 72-0.122*72, 7.77 * 72])[
                 0].columns[0]
             export_port_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[1.8 * 72-0.122*72, 0.575 * 72, 2.15 * 72-0.122*72, 2.745 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[1.8 * 72-0.122*72, 0.575 * 72, 2.15 * 72-0.122*72, 2.745 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[1.8 * 72-0.122*72, 0.575 * 72, 2.15 * 72-0.122*72, 2.745 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[1.8 * 72-0.122*72, 0.575 * 72, 2.15 * 72-0.122*72, 2.745 * 72])[
                 0].iloc[0, 0]
             record_num_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[1.8 * 72-0.122*72, 2.74 * 72, 2.15 * 72-0.122*72, 4.9 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[1.8 * 72-0.122*72, 2.74 * 72, 2.15 * 72-0.122*72, 4.9 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[1.8 * 72-0.122*72, 2.74 * 72, 2.15 * 72-0.122*72, 4.9 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[1.8 * 72-0.122*72, 2.74 * 72, 2.15 * 72-0.122*72, 4.9 * 72])[
                 0].iloc[0, 0]
             export_date_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[1.8 * 72-0.122*72, 4.9 * 72, 2.15 * 72-0.122*72, 6.205 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[1.8 * 72-0.122*72, 4.9 * 72, 2.15 * 72-0.122*72, 6.205 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[1.8 * 72-0.122*72, 4.9 * 72, 2.15 * 72-0.122*72, 6.205 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[1.8 * 72-0.122*72, 4.9 * 72, 2.15 * 72-0.122*72, 6.205 * 72])[
                 0].iloc[0, 0]
             declare_date_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[1.8 * 72-0.122*72, 6.205 * 72, 2.15 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[1.8 * 72-0.122*72, 6.205 * 72, 2.15 * 72-0.122*72, 7.765 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[1.8 * 72-0.122*72, 6.205 * 72, 2.15 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[1.8 * 72-0.122*72, 6.205 * 72, 2.15 * 72-0.122*72, 7.765 * 72])[
                 0].iloc[0, 0]
             domestic_consignee_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.15 * 72-0.122*72, 0.575 * 72, 2.525 * 72-0.122*72, 2.745 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.15 * 72-0.122*72, 0.575 * 72, 2.525 * 72-0.122*72, 2.745 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.15 * 72-0.122*72, 0.575 * 72, 2.525 * 72-0.122*72, 2.745 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.15 * 72-0.122*72, 0.575 * 72, 2.525 * 72-0.122*72, 2.745 * 72])[
                 0].iloc[0, 0]
             shipping_method_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.15 * 72-0.122*72, 2.745 * 72, 2.525 * 72-0.122*72, 4.13 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.15 * 72-0.122*72, 2.745 * 72, 2.525 * 72-0.122*72, 4.13 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.15 * 72-0.122*72, 2.745 * 72, 2.525 * 72-0.122*72, 4.13 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.15 * 72-0.122*72, 2.745 * 72, 2.525 * 72-0.122*72, 4.13 * 72])[
                 0].iloc[0, 0]
             means_of_transport_name_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.15 * 72-0.122*72, 4.13 * 72, 2.525 * 72-0.122*72, 6.205 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.15 * 72-0.122*72, 4.13 * 72, 2.525 * 72-0.122*72, 6.205 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.15 * 72-0.122*72, 4.13 * 72, 2.525 * 72-0.122*72, 6.205 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.15 * 72-0.122*72, 4.13 * 72, 2.525 * 72-0.122*72, 6.205 * 72])[
                 0].iloc[0, 0]
             bill_of_lading_number_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.15 * 72-0.122*72, 6.205 * 72, 2.525 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.15 * 72-0.122*72, 6.205 * 72, 2.525 * 72-0.122*72, 7.765 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.15 * 72-0.122*72, 6.205 * 72, 2.525 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.15 * 72-0.122*72, 6.205 * 72, 2.525 * 72-0.122*72, 7.765 * 72])[
                 0].iloc[0, 0]
             prod_entity_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.525 * 72-0.122*72, 0.575 * 72, 2.88 * 72-0.122*72, 2.745 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.525 * 72-0.122*72, 0.575 * 72, 2.88 * 72-0.122*72, 2.745 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.525 * 72-0.122*72, 0.575 * 72, 2.88 * 72-0.122*72, 2.745 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.525 * 72-0.122*72, 0.575 * 72, 2.88 * 72-0.122*72, 2.745 * 72])[
                 0].iloc[0, 0]
             trading_method_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.525 * 72-0.122*72, 2.745 * 72, 2.88 * 72-0.122*72, 4.9 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.525 * 72-0.122*72, 2.745 * 72, 2.88 * 72-0.122*72, 4.9 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.525 * 72-0.122*72, 2.745 * 72, 2.88 * 72-0.122*72, 4.9 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.525 * 72-0.122*72, 2.745 * 72, 2.88 * 72-0.122*72, 4.9 * 72])[
                 0].iloc[0, 0]
             nature_of_exemption_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.525 * 72-0.122*72, 4.9 * 72, 2.88 * 72-0.122*72, 6.8 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.525 * 72-0.122*72, 4.9 * 72, 2.88 * 72-0.122*72, 6.8 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.525 * 72-0.122*72, 4.9 * 72, 2.88 * 72-0.122*72, 6.8 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.525 * 72-0.122*72, 4.9 * 72, 2.88 * 72-0.122*72, 6.8 * 72])[
                 0].iloc[0, 0]
             exchange_settlement_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.525 * 72-0.122*72, 4.9 * 72, 2.88 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.525 * 72-0.122*72, 4.9 * 72, 2.88 * 72-0.122*72, 7.765 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.525 * 72-0.122*72, 4.9 * 72, 2.88 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.525 * 72-0.122*72, 4.9 * 72, 2.88 * 72-0.122*72, 7.765 * 72])[
                 0].iloc[0, 0]
             license_number_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.88 * 72-0.122*72, 0.575 * 72, 3.235 * 72-0.122*72, 2.745 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.88 * 72-0.122*72, 0.575 * 72, 3.235 * 72-0.122*72, 2.745 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.88 * 72-0.122*72, 0.575 * 72, 3.235 * 72-0.122*72, 2.745 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.88 * 72-0.122*72, 0.575 * 72, 3.235 * 72-0.122*72, 2.745 * 72])[
                 0].iloc[0, 0]
             country_of_arrival_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.88 * 72-0.122*72, 2.745 * 72, 3.235 * 72-0.122*72, 4.9 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.88 * 72-0.122*72, 2.745 * 72, 3.235 * 72-0.122*72, 4.9 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.88 * 72-0.122*72, 2.745 * 72, 3.235 * 72-0.122*72, 4.9 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.88 * 72-0.122*72, 2.745 * 72, 3.235 * 72-0.122*72, 4.9 * 72])[
                 0].iloc[0, 0]
             transshipment_port_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.88 * 72-0.122*72, 4.9 * 72, 3.235 * 72-0.122*72, 6.205 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.88 * 72-0.122*72, 4.9 * 72, 3.235 * 72-0.122*72, 6.205 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.88 * 72-0.122*72, 4.9 * 72, 3.235 * 72-0.122*72, 6.205 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.88 * 72-0.122*72, 4.9 * 72, 3.235 * 72-0.122*72, 6.205 * 72])[
                 0].iloc[0, 0]
             domestic_source_of_goods_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.88 * 72-0.122*72, 6.205 * 72, 3.235 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.88 * 72-0.122*72, 6.205 * 72, 3.235 * 72-0.122*72, 7.765 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[2.88 * 72-0.122*72, 6.205 * 72, 3.235 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[2.88 * 72-0.122*72, 6.205 * 72, 3.235 * 72-0.122*72, 7.765 * 72])[
                 0].iloc[0, 0]
             approval_no_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.235 * 72-0.122*72, 0.575 * 72, 3.625 * 72-0.122*72, 2.745 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.235 * 72-0.122*72, 0.575 * 72, 3.625 * 72-0.122*72, 2.745 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.235 * 72-0.122*72, 0.575 * 72, 3.625 * 72-0.122*72, 2.745 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.235 * 72-0.122*72, 0.575 * 72, 3.625 * 72-0.122*72, 2.745 * 72])[
                 0].iloc[0, 0]
             closing_method_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.235 * 72-0.122*72, 2.745 * 72, 3.625 * 72-0.122*72, 4.13 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.235 * 72-0.122*72, 2.745 * 72, 3.625 * 72-0.122*72, 4.13 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.235 * 72-0.122*72, 2.745 * 72, 3.625 * 72-0.122*72, 4.13 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.235 * 72-0.122*72, 2.745 * 72, 3.625 * 72-0.122*72, 4.13 * 72])[
                 0].iloc[0, 0]
             freight_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.235 * 72-0.122*72, 4.13 * 72, 3.625 * 72-0.122*72, 5.365 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.235 * 72-0.122*72, 4.13 * 72, 3.625 * 72-0.122*72, 5.365 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.235 * 72-0.122*72, 4.13 * 72, 3.625 * 72-0.122*72, 5.365 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.235 * 72-0.122*72, 4.13 * 72, 3.625 * 72-0.122*72, 5.365 * 72])[
                 0].iloc[0, 0]
             premium_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.235 * 72-0.122*72, 5.365 * 72, 3.625 * 72-0.122*72, 6.205 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.235 * 72-0.122*72, 5.365 * 72, 3.625 * 72-0.122*72, 6.205 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.235 * 72-0.122*72, 5.365 * 72, 3.625 * 72-0.122*72, 6.205 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.235 * 72-0.122*72, 5.365 * 72, 3.625 * 72-0.122*72, 6.205 * 72])[
                 0].iloc[0, 0]
             miscellaneous_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.235 * 72-0.122*72, 6.205 * 72, 3.625 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.235 * 72-0.122*72, 6.205 * 72, 3.625 * 72-0.122*72, 7.765 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.235 * 72-0.122*72, 6.205 * 72, 3.625 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.235 * 72-0.122*72, 6.205 * 72, 3.625 * 72-0.122*72, 7.765 * 72])[
                 0].iloc[0, 0]
             contract_num_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.625 * 72-0.122*72, 0.575 * 72, 3.975 * 72-0.122*72, 2.745 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.625 * 72-0.122*72, 0.575 * 72, 3.975 * 72-0.122*72, 2.745 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.625 * 72-0.122*72, 0.575 * 72, 3.975 * 72-0.122*72, 2.745 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.625 * 72-0.122*72, 0.575 * 72, 3.975 * 72-0.122*72, 2.745 * 72])[
                 0].iloc[0, 0]
             num_of_pieces_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.625 * 72-0.122*72, 2.745 * 72, 3.975 * 72-0.122*72, 4.13 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.625 * 72-0.122*72, 2.745 * 72, 3.975 * 72-0.122*72, 4.13 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.625 * 72-0.122*72, 2.745 * 72, 3.975 * 72-0.122*72, 4.13 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.625 * 72-0.122*72, 2.745 * 72, 3.975 * 72-0.122*72, 4.13 * 72])[
                 0].iloc[0, 0]
             type_of_packaging_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.625 * 72-0.122*72, 4.13 * 72, 3.975 * 72-0.122*72, 5.365 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.625 * 72-0.122*72, 4.13 * 72, 3.975 * 72-0.122*72, 5.365 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.625 * 72-0.122*72, 4.13 * 72, 3.975 * 72-0.122*72, 5.365 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.625 * 72-0.122*72, 4.13 * 72, 3.975 * 72-0.122*72, 5.365 * 72])[
                 0].iloc[0, 0]
             gross_weight_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.625 * 72-0.122*72, 5.365 * 72, 3.975 * 72-0.122*72, 6.8 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.625 * 72-0.122*72, 5.365 * 72, 3.975 * 72-0.122*72, 6.8 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.625 * 72-0.122*72, 5.365 * 72, 3.975 * 72-0.122*72, 6.8 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.625 * 72-0.122*72, 5.365 * 72, 3.975 * 72-0.122*72, 6.8 * 72])[
                 0].iloc[0, 0]
             net_weight_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.625 * 72-0.122*72, 6.8 * 72, 3.975 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.625 * 72-0.122*72, 6.8 * 72, 3.975 * 72-0.122*72, 7.765 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.625 * 72-0.122*72, 6.8 * 72, 3.975 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.625 * 72-0.122*72, 6.8 * 72, 3.975 * 72-0.122*72, 7.765 * 72])[
                 0].iloc[0, 0]
             container_no_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.975 * 72-0.122*72, 0.575 * 72, 4.325 * 72-0.122*72, 2.745 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.975 * 72-0.122*72, 0.575 * 72, 4.325 * 72-0.122*72, 2.745 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.975 * 72-0.122*72, 0.575 * 72, 4.325 * 72-0.122*72, 2.745 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.975 * 72-0.122*72, 0.575 * 72, 4.325 * 72-0.122*72, 2.745 * 72])[
                 0].iloc[0, 0]
             documents_attached_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.975 * 72-0.122*72, 2.745 * 72, 4.325 * 72-0.122*72, 6.205 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.975 * 72-0.122*72, 2.745 * 72, 4.325 * 72-0.122*72, 6.205 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.975 * 72-0.122*72, 2.745 * 72, 4.325 * 72-0.122*72, 6.205 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.975 * 72-0.122*72, 2.745 * 72, 4.325 * 72-0.122*72, 6.205 * 72])[
                 0].iloc[0, 0]
             manufacturer_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.975 * 72-0.122*72, 6.205 * 72, 4.325 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.975 * 72-0.122*72, 6.205 * 72, 4.325 * 72-0.122*72, 7.765 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[3.975 * 72-0.122*72, 6.205 * 72, 4.325 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[3.975 * 72-0.122*72, 6.205 * 72, 4.325 * 72-0.122*72, 7.765 * 72])[
                 0].iloc[0, 0]
             shipping_marks_and_remarks_i = '' if \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[4.325 * 72-0.122*72, 0.575 * 72, 4.67 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[4.325 * 72-0.122*72, 0.575 * 72, 4.67 * 72-0.122*72, 7.765 * 72])[
                 0].empty \
                 else \
-            tabula.read_pdf(input_file_name, pages=page_num + 1, area=[4.325 * 72-0.122*72, 0.575 * 72, 4.67 * 72-0.122*72, 7.765 * 72])[
+            tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[4.325 * 72-0.122*72, 0.575 * 72, 4.67 * 72-0.122*72, 7.765 * 72])[
                 0].iloc[0, 0]
             print_date_i = pdf.pages[page_num].extract_text()[
                            pdf.pages[page_num].extract_text().find("打印日期：") + len("打印日期："):len(
                                pdf.pages[page_num].extract_text())]
 
             for row in range(6):
-                if tabula.read_pdf(input_file_name, pages=page_num + 1, area=[(5.027+row*0.458) * 72-0.122*72, 0.575 * 72, (5.485+row*0.458) * 72-0.122*72, 7.765 * 72])[0].empty is False:
-                    good_num_i = tabula.read_pdf(input_file_name, pages=page_num + 1,
+                if tabula.read_pdf(uploaded_file, pages=page_num + 1, area=[(5.027+row*0.458) * 72-0.122*72, 0.575 * 72, (5.485+row*0.458) * 72-0.122*72, 7.765 * 72])[0].empty is False:
+                    good_num_i = tabula.read_pdf(uploaded_file, pages=page_num + 1,
                                                  area=[(5.027 + row * 0.458) * 72-0.122*72, 1.05 * 72,
                                                        (5.485 + row * 0.458) * 72-0.122*72, 1.725 * 72])[0].columns[0]
-                    good_name_i = tabula.read_pdf(input_file_name, pages=page_num + 1,
+                    good_name_i = tabula.read_pdf(uploaded_file, pages=page_num + 1,
                                                   area=[(5.027 + row * 0.458) * 72-0.122*72, 1.725 * 72,
                                                         (5.485 + row * 0.458) * 72-0.122*72, 2.75 * 72])[0].columns[0]
-                    good_quan_i = tabula.read_pdf(input_file_name, pages=page_num + 1,
+                    good_quan_i = tabula.read_pdf(uploaded_file, pages=page_num + 1,
                                                   area=[(5.027 + row * 0.458) * 72-0.122*72, 2.75 * 72,
                                                         (5.485 + row * 0.458) * 72-0.122*72, 3.6 * 72])[0].columns[
-                                      0] + ' ' + str(tabula.read_pdf(input_file_name, pages=page_num + 1,
+                                      0] + ' ' + str(tabula.read_pdf(uploaded_file, pages=page_num + 1,
                                                                      area=[(5.027 + row * 0.458) * 72-0.122*72, 2.75 * 72,
                                                                            (5.485 + row * 0.458) * 72-0.122*72, 3.6 * 72])[
                                                          0].iloc[0, 0])
-                    country_of_final_destination_i = tabula.read_pdf(input_file_name, pages=page_num + 1,
+                    country_of_final_destination_i = tabula.read_pdf(uploaded_file, pages=page_num + 1,
                                                                      area=[(5.027 + row * 0.458) * 72-0.122*72, 3.6 * 72,
                                                                            (5.485 + row * 0.458) * 72-0.122*72, 4.85 * 72])[
                                                          0].columns[0] + str(
-                        tabula.read_pdf(input_file_name, pages=page_num + 1,
+                        tabula.read_pdf(uploaded_file, pages=page_num + 1,
                                         area=[(5.027 + row * 0.458) * 72-0.122*72, 3.6 * 72, (5.485 + row * 0.458) * 72-0.122*72,
                                               4.85 * 72])[0].iloc[0, 0])
-                    price_i = tabula.read_pdf(input_file_name, pages=page_num + 1,
+                    price_i = tabula.read_pdf(uploaded_file, pages=page_num + 1,
                                               area=[(5.027 + row * 0.458) * 72-0.122*72, 4.85 * 72, (5.485 + row * 0.458) * 72-0.122*72,
                                                     5.4 * 72])[0].columns[0]
-                    sum_price_i = tabula.read_pdf(input_file_name, pages=page_num + 1,
+                    sum_price_i = tabula.read_pdf(uploaded_file, pages=page_num + 1,
                                                   area=[(5.027 + row * 0.458) * 72-0.122*72, 5.4 * 72,
                                                         (5.485 + row * 0.458) * 72-0.122*72, 6.25 * 72])[0].columns[0]
 
