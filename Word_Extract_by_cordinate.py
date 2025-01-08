@@ -12,7 +12,7 @@ uploaded_file = st.file_uploader("选择PDF文件:", type="pdf")
 if uploaded_file is not None:
     output_file_name = str(st.text_input('输出文件名称：')) + '.xlsx'
     input_file_name = str(uploaded_file.name) + '.pdf'
-    pdf = pdfplumber.open(input_file_name)
+    pdf = pdfplumber.open(uploaded_file)
     pdf_page_num = len(pdf.pages)
 
     sheet_nums = []  # 预录入编号
